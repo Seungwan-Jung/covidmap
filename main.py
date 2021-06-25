@@ -8,7 +8,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input,Output
 import plotly.express as px
-from data import countries_df, totals_df, dropdown_options
+from data import countries_df, totals_df, dropdown_options, make_global_df
 from builders import make_table
 
 stylesheets = [
@@ -94,15 +94,30 @@ app.layout = html.Div(
                                 for country in dropdown_options
                             ],
                         ),
-                        html.H1(id="country-output"),
+                        dcc.Graph(id="country_graph"),
                     ]
                 ),
             ]),
     ],
 )
 
-@app.callback(Output("country-output","children"),[Input("country","value")])
+@app.callback(Output("country-graph","figure"),[Input("country","value")])
 def update_hello(value):
-    print(value)
-if __name__ == "__main__":
+    df = make_global_df()
+    fig = px.line(
+        df,
+        x="date",
+        y=["confirmed","deaths","recovered"],
+        template="plotly_dark",
+        labels={"value":"Cases","variable":"Condition","date":"Date"},
+        hover_data={"value":":,","variable":False,"date":False},
+        
+    )
+    fig.update_xaxes(rangeslider_visible=True)
+    fig["data"][0]["line"]["color"] = "#e74c3c"
+    fig["data"][0]["line"]["color"] = "#8e44ad"
+    fig["data"][0]["line"]["color"] = "#27ae60"
+    return fig 
+    
+if __name__ =="__main__":    
     app.run_server(debug=True)
