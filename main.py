@@ -24,6 +24,8 @@ stylesheets = [
 
 app = dash.Dash(__name__, external_stylesheets=stylesheets)
 
+server = app.server
+
 bubble_map = px.scatter_geo(
     countries_df,
     size="Confirmed",
@@ -95,6 +97,12 @@ app.layout = html.Div(
                     style={"grid-column":"span 3"},
                     children=[
                         dcc.Dropdown(
+                            style={
+                                "width":320,
+                                "margin":"0 auto",
+                                "color": "#111111",
+                            },
+                            placeholder="Select a Country",
                             id="country",
                             options=[
                                 {"label": country, "value": country}
@@ -104,11 +112,12 @@ app.layout = html.Div(
                         dcc.Graph(id="country_graph"),
                     ],
                 ),
-            ]),
+            ],
+        ),
     ],
 )
 
-@app.callback(Output("country-graph","figure"),[Input("country","value")])
+@app.callback(Output("country_graph","figure"),[Input("country","value")])
 def update_hello(value):
     if value:
         df = make_country_df(value)

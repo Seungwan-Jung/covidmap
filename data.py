@@ -22,7 +22,7 @@ dropdown_options =  dropdown_options["Country_Region"]
 
 def make_country_df(country):
     def make_df(condition):
-        df = pd.read_csv("data/time_{condition}.csv")
+        df = pd.read_csv(f"data/{condition}_global.csv")
         df = df.loc[df["Country/Region"] == country]
         df = (
             df.drop(columns=["Province/State", "Country/Region", "Lat", "Long"])
@@ -44,7 +44,7 @@ def make_country_df(country):
 
 def make_global_df():
     def make_df(condition):
-        df = pd.read_csv(f"data/time_{condition}.csv")
+        df = pd.read_csv(f"data/{condition}_global.csv")
         df = (
             df.drop(["Province/State", "Country/Region", "Lat", "Long"], axis=1)
             .sum()
